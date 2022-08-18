@@ -5,6 +5,9 @@
 1) Intel CPU
 2) Linux OS (Tested on Ubuntu) with superuser (i.e., ~sudo~) permissions
 3) NVIDIA GPU (Not used in the session)
+4) TensorFlow (tested on version 2.9.0)
+5) CarbonTracker
+6) Git
 
 Most energy measurement software rely on Intel's RAPL interface to obtain CPU
 and energy data.  In Linux, one way to access the RAPL interface is via the
@@ -25,3 +28,53 @@ energy consumption. The way we monitor the energy consumption with CodeCarbon is
 the same for CPU and GPU. If you want to use GPUs CodeCarbon only supports
 NVIDIA GPUs, and you should be able to run Tensorflow with GPU support
 ([[https://www.tensorflow.org/install/pip]])
+
+* Installation procedure
+
+This part assumes that you are used to using a terminal.
+Open a terminal, then run the following commands
+
+** 1. Create a directory to clone this repository
+
+#+begin_src shell
+mkdir idessai-2022-ai-energy-consumption
+cd idessai-2022-ai-energy-consumption
+#+end_src
+
+** 2. Clone this repository
+
+#+begin_src shell
+git clone https://github.com/danilo-carastan-santos/ai-energy-consumption.git
+#+end_src
+
+** 3. Create and activate a Python virtual environment
+
+#+begin_src shell
+cd ai-energy-consumption
+python3 -m venv venv/
+source venv/bin/activate
+#+end_src
+
+** 4. Install the software requirements
+
+#+begin_src shell
+pip install --upgrade pip
+pip install -r requirements.txt
+#+end_src
+
+** 5. Run session.py as test
+
+#+begin_src shell
+sudo venv/bin/python session.py --sect 1b
+#+end_src
+
+** Observations
+- Once inside the virtual environment, you can run the ~deactivate~ command to
+disconnect from the virtual environment.
+- There are four sections ~(1a, 1b, 1c, 2a)~, each of which presents new
+  concepts and propose questions ~(Q1, Q2, Q3, Q4, Q5)~. These questions will be
+  explored during the hands-on session. You can run a different section by using
+  the ~--sect~ argument in the command at step 5.
+- The questions can be seen at the ~session.py~ as comments. Inside a terminal
+  you can use the ~nano~ editor (i.e., command ~nano session.py~) to navigate
+  and edit the source code.

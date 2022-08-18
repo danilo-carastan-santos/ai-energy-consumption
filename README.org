@@ -7,15 +7,15 @@ consumption of AI" performed at the Second Inria-DFKI European Summer School on
 AI (IDESSAI 2022) at the Sustainable AI track.
 
 ** Repository contents
-[[./requirements.org]]: Pre-installation instructions and requirements for the
+*[[requirements.org]]*: Pre-installation instructions and requirements for the
 hands-on session. *READ THIS FILE FIRST!*
 
-[[./course_slides.pdf]]: Course slides.
+*[[course_slides.pdf]]*: Course slides.
 
-[[./session.py]]: Main file for the hands-on session.
+*[[session.py]]*: Main file for the hands-on session.
 
-[[./models.py]]: Some models descriptions used in the hands-on session.
+*[[models.py]]*: Some models descriptions used in the hands-on session.
 
-[[./cct.py]]: Compact Convolutional Transformers model used in the hands-on session.
+*[[cct.py]]*: Compact Convolutional Transformers model used in the hands-on session.
 
-[[./requirements.txt]]: Package requirements used in the installation istructions.
+*[[requirements.txt]]*: Package requirements used in the installation instructions.
