@@ -1,0 +1,14 @@
+#+TITLE: Companion Material: Measuring the energy consumption of AI
+#+AUTHOR: Danilo Carastan-Santos
+
+* Overview
+This repository contains the material for the course "Measuring the energy
+consumption of AI" performed at the Second Inria-DFKI European Summer School on
+AI (IDESSAI 2022) at the Sustainable AI track.
+
+** Repository contents
+[[./course_slides.pdf]]: Course slides
+[[./session.py]]: Main file for the hands-on session
+[[./models.py]]: Some models descriptions used in the hands-on session
+[[./cct.py]]: Compact Convolutional Transformers model used in the hands-on session
+[[./Dockerfile]]: Dockerfile with the session's dependencies (Tensowflow, CarbonTracker, etc.)
