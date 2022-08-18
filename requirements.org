@@ -1,0 +1,27 @@
+#+TITLE: Requirements: Measuring the energy consumption of AI
+#+AUTHOR: Danilo Carastan-Santos
+
+* Hardware Requirements
+1) Intel CPU
+2) Linux OS (Tested on Ubuntu) with superuser (i.e., ~sudo~) permissions
+3) NVIDIA GPU (Not used in the session)
+
+Most energy measurement software rely on Intel's RAPL interface to obtain CPU
+and energy data.  In Linux, one way to access the RAPL interface is via the
+~powercap~ framework
+([[https://www.kernel.org/doc/html/latest/power/powercap/powercap.html]]).  For
+the hands-on session, you must the able to access RAPL by the following command
+
+#+begin_src bash
+sudo cat /sys/class/powercap/intel-rapl/intel-rapl:0/energy_uj
+#+end_src
+
+The ~sudo~ became necessary as a patch to avoid a security vulnerability with
+the RAPL interface
+([[https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/running-average-power-limit-energy-reporting.html]])
+
+To avoid additional requirements, the session does not cover monitoring the GPU
+energy consumption. The way we monitor the energy consumption with CodeCarbon is
+the same for CPU and GPU. If you want to use GPUs CodeCarbon only supports
+NVIDIA GPUs, and you should be able to run Tensorflow with GPU support
+([[https://www.tensorflow.org/install/pip]])

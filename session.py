@@ -222,9 +222,7 @@ elif args.sect == '1c':
 ## Getting energy information when training ##
 ##############################################
 elif args.sect == '2a':    
-    start_2a = time.time()
-    batch_size = 64 # @param [32, 64, 128, 256, 512] {type:"raw"} 
-    epochs = 32 # @param [32, 64, 128, 256, 512] {type:"raw"}    
+    start_2a = time.time()       
 
     # Creating a callback method to collect data while training
     class MyTrainingCallBack(Callback):
@@ -241,16 +239,10 @@ elif args.sect == '2a':
         def on_epoch_end(self, epoch, logs=None):
             self.codecarbon_tracker.flush()
 
-            # Energy measured in the 1b run on my laptop 
-            energy_cap_kwh = 0.001071591612688175
-            
-            # Getting the total energy consumption from the tracker
-            train_total_energy = self.codecarbon_tracker._total_energy.kWh
+            #### Q4 answer code goes here ####
+            # Be mindful of the identation level
 
-            # Checking if we pass the energy cap at the end of the epoch
-            if train_total_energy >= energy_cap_kwh:
-                # command to tell TF to stop training
-                self.model.stop_training = True            
+            ##################################       
 
         ## Q5: How to stop training in a **batch** when we pass a energy cap?
         # Use the energy measured at section 1b as an energy cap for the
@@ -262,23 +254,11 @@ elif args.sect == '2a':
         # Hint: use self.codecarbon_tracker._measure_power_and_energy() instead
         # of self.codecarbon_tracker.flush() to avoid IO overhead
         ## Q6: What happens if you don't call _measure_power_and_energy() or flush()?
-        def on_batch_end(self, batch, logs=None):
-            # Energy measured in the 1b run on my laptop 
-            energy_cap_kwh = 0.001071591612688175
-            
-            # Actively calling the trackers's function to get energy values
-            # Otherwise the tracker will get energy values only every 15 seconds
-            # (default value). We could use flush but flush performs IO
-            # operations and this would result in a larger overhead
-            self.codecarbon_tracker._measure_power_and_energy()
 
-            # Getting the total energy consumption from the tracker
-            train_total_energy = self.codecarbon_tracker._total_energy.kWh            
+        #### Q5 answer code goes here ####
+        # Be mindful of the identation level
 
-            # Checking if we pass the energy cap at the end of the batch
-            if train_total_energy >= energy_cap_kwh:
-                # command to tell TF to stop training
-                self.model.stop_training = True
+        ##################################
 
 
     # Small label reshape to fit the CCT model
