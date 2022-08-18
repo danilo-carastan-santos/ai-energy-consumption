@@ -224,7 +224,7 @@ elif args.sect == '1c':
 elif args.sect == '2a':    
     start_2a = time.time()       
 
-    # Creating a callback method to collect data while training
+    # Creating a callback class to collect data while training
     class MyTrainingCallBack(Callback):
         def __init__(self, codecarbon_tracker):
             self.codecarbon_tracker = codecarbon_tracker
