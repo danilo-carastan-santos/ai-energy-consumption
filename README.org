@@ -18,5 +18,4 @@ hands-on session. *READ THIS FILE FIRST!*
 
 [[./cct.py]]: Compact Convolutional Transformers model used in the hands-on session.
 
-[[./Dockerfile]]: Dockerfile with the session's dependencies (Tensowflow,
-CarbonTracker, etc.).
+[[./requirements.txt]]: Package requirements used in the installation istructions.

@@ -44,8 +44,6 @@ pip install -U -q tensorflow-addons
 from tensorflow.keras import layers
 from tensorflow import keras
 
-import matplotlib.pyplot as plt
-#import tensorflow_addons as tfa
 import tensorflow as tf
 import numpy as np
 

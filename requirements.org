@@ -1,7 +1,7 @@
 #+TITLE: Requirements: Measuring the energy consumption of AI
 #+AUTHOR: Danilo Carastan-Santos
 
-* Hardware Requirements
+* Hardware/Sofware** Requirements
 1) Intel CPU
 2) Linux OS (Tested on Ubuntu) with superuser (i.e., ~sudo~) permissions
 3) NVIDIA GPU (Not used in the session)
