@@ -198,6 +198,8 @@ elif args.sect == '1c':
     # CFE% stands for the percentage of carbon free energy
     # a CFE of 10% means that 10% of the energy has a CI of 0
     # the remaining 90% emits CO2 according to the corresponding CI
+    # A source of carbon intensity of electricity generation data:
+    # https://ourworldindata.org/grapher/carbon-intensity-electricity?time=latest
 
     #Data center data
     #Name    CFE%    CI (gCO2e/kWh)
