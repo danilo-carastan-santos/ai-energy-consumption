@@ -6,6 +6,8 @@ This repository contains the material for the course "Measuring the energy
 consumption of AI" performed at the Second Inria-DFKI European Summer School on
 AI (IDESSAI 2022) at the Sustainable AI track.
 
+*Update: * This course was also given at the ERAD|ERAMIA-NO2 2022 (https://www2.sbc.org.br/erad_eramia-no2/programa.html)
+
 *Lecturer:* Danilo Carastan-Santos
 - Twitter: [[https://twitter.com/DCarastanSantos]]
 - LinkedIn: [[https://www.linkedin.com/in/danilo-carastan-santos/]]
