@@ -35,7 +35,7 @@ args = parser.parse_args()
 ##############################################
 
 # 1a: Standard Run
-# 1b: Basic use of CarbonTracker
+# 1b: Basic use of CodeCarbon
 # 1c: Energy is all we need: tracking energy
 # 2a: Getting energy information when training
 
@@ -87,7 +87,7 @@ if args.sect == '1a':
     sys.exit()
 
 ##############################################
-### Section 1b: Basic use of CarbonTracker ###
+### Section 1b: Basic use of CodeCarbon    ###
 ##############################################
 elif args.sect == '1b':
     start_1b = time.time()
@@ -104,7 +104,7 @@ elif args.sect == '1b':
     # https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
     # Tracker initialization parameters:
     # https://github.com/mlco2/codecarbon/blob/96c1ce15dbf33eaaaa378d3104bde64bfc9f1416/codecarbon/emissions_tracker.py#L157
-    tracker = OfflineEmissionsTracker(country_iso_code='DEU', log_level='error')
+    tracker = OfflineEmissionsTracker(country_iso_code='BRA', log_level='error')
 
     # Start Tracking 
     tracker.start()
@@ -152,7 +152,7 @@ elif args.sect == '1c':
     # Creating the tracker object
     # Country ISO codes can be found on Wikipedia
     # https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
-    tracker = OfflineEmissionsTracker(country_iso_code='DEU', log_level='error')
+    tracker = OfflineEmissionsTracker(country_iso_code='BRA', log_level='error')
 
     # Start Tracking 
     tracker.start()
@@ -187,7 +187,7 @@ elif args.sect == '1c':
     power_usage_efficiency = 1.1
 
     #### Q2 answer code goes here ####
-    q2_answer = np.NaN
+    q2_answer = tracker._total_energy.kWh * power_usage_efficiency
     ##################################    
     print('My calculated total energy consumption (with PUE): ' + str(q2_answer) + ' kWh')
 
@@ -209,8 +209,8 @@ elif args.sect == '1c':
                     'dc1':{'CFE':11, 'CI':746},
                     'dc2':{'CFE':91, 'CI':127}
                     }
-    q3_answer_dc1 = np.NaN
-    q3_answer_dc2 = np.NaN    
+    q3_answer_dc1 = q2_answer * (1 - (dc_data['dc1']['CFE'] / 100)) * (dc_data['dc1']['CI'] / 100)
+    q3_answer_dc2 = q2_answer * (1 - (dc_data['dc2']['CFE'] / 100)) * (dc_data['dc2']['CI'] / 100)    
     ##################################   
     print('My calculated Emissions (dc1): '+ str(q3_answer_dc1) + ' KgCO2e')
     print('My calculated Emissions (dc2): '+ str(q3_answer_dc2) + ' KgCO2e')
@@ -301,7 +301,7 @@ elif args.sect == '2a':
     # Creating the tracker object
     # Country ISO codes can be found on Wikipedia
     # https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
-    tracker = OfflineEmissionsTracker(country_iso_code='DEU', log_level='error')
+    tracker = OfflineEmissionsTracker(country_iso_code='BRA', log_level='error')
 
     # Initializing my call back object to be used during training
     my_callback = MyTrainingCallBack(tracker)
