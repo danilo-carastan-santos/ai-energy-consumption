@@ -1,2 +1,4 @@
 tensorflow==2.9.0
 codecarbon
+pandas
+seaborn

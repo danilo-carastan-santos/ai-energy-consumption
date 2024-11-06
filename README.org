@@ -3,13 +3,15 @@
 
 * Overview
 This repository contains the material for the course "Measuring the energy
-consumption of AI" performed at the Second Inria-DFKI European Summer School on
-AI (IDESSAI 2022) at the Sustainable AI track.
+consumption of AI" 
 
-*Update:* This course was also given at the ERAD|ERAMIA-NO2 2022 (https://www2.sbc.org.br/erad_eramia-no2/programa.html)
+* Performed sessions
+- Second Inria-DFKI European Summer School on AI (IDESSAI 2022) at the Sustainable AI track.
+- ERAD|ERAMIA-NO2 2022 (https://www2.sbc.org.br/erad_eramia-no2/programa.html)
+- Sétima Escola Regional de Alto Desempenho do Centro-Oeste (ERAD-CO https://sites.google.com/view/erad-co-2024/p%C3%A1gina-inicial)
 
 *Lecturer:* Danilo Carastan-Santos
-- Twitter: [[https://twitter.com/DCarastanSantos]]
+- Website: [[https://danilo-carastan-santos.github.io/]]
 - LinkedIn: [[https://www.linkedin.com/in/danilo-carastan-santos/]]
 
 * Acknowledgements
@@ -19,8 +21,7 @@ Multi-disciplinary Institute on Artificial Intelligence MIAI at Grenoble Alpes
 projects.
 
 ** Repository contents
-- *[[requirements.org]]*: Pre-installation instructions and requirements for the
-hands-on session. *READ THIS FILE FIRST!*
+- *[[requirements.org]]*: Pre-installation instructions and requirements for the hands-on session. *READ THIS FILE FIRST!*
 
 - *[[course_slides.pdf]]*: Course slides.
 
@@ -31,3 +32,9 @@ hands-on session. *READ THIS FILE FIRST!*
 - *[[cct.py]]*: Compact Convolutional Transformers model used in the hands-on session.
 
 - *[[requirements.txt]]*: Package requirements used in the installation instructions.
+
+- *[[./bin]]*: Contains a compiled version of Alumet ([https://alumet.dev/]), tested in a Linux system.
+
+- *[[./Results-CSV]]*: Folder which Alumet's results will be saved. It contains one ~csv~ file as an example.
+
+- *[[alumet-config.toml]]*: Alumet's configuration file.

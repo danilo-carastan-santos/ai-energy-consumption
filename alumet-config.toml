@@ -1,0 +1,23 @@
+max_update_interval = "500ms"
+
+[plugins.rapl]
+poll_interval = "1s"
+flush_interval = "5s"
+no_perf_events = false
+
+[plugins.perf]
+poll_interval = "1s"
+flush_interval = "5s"
+hardware_events = ["REF_CPU_CYCLES", "CACHE_MISSES", "BRANCH_MISSES"]
+software_events = []
+cache_events = ["LL_READ_MISS"]
+
+[plugins.csv]
+output_path = "alumet-output.csv"
+force_flush = true
+append_unit_to_metric_name = true
+use_unit_display_name = true
+csv_delimiter = ";"
+
+[plugins.socket-control]
+socket_path = "alumet-control.sock"

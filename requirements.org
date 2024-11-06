@@ -62,17 +62,40 @@ pip install --upgrade pip
 pip install -r requirements.txt
 #+end_src
 
-** 5. Run session.py as test
+** 5. Enable access to perf-events data without administrator rights
+
+This step is required to run Alumet (section 1d). Without this section 1d will not work.
+
+#+BEGIN_SRC shell
+sudo sysctl -w kernel.perf_event_paranoid=0
+#+END_SRC
+
+~kernel.perf_event_paranoid~ ranges from -1 to 2 (source: [[https://www.kernel.org/doc/Documentation/sysctl/kernel.txt]]).
+Setting it to 0 is sufficient for Alumet. You can revert by setting it to 2, for instance. 
+
+** 6. Run session.py as test
 
 #+begin_src shell
 sudo venv/bin/python session.py --sect 1b
 #+end_src
 
+If you have sudo permissions, CodeCarbon will use the ~powercap~ interface to collect RAPL data.
+
+If you don't have ~sudo~ permissions, CodeCarbon (sections 1b, 1c, and 2a) will run in TDP mode.
+It will search for the TDP of your processor, or it will fall back to a default TDP of 85W.
+Then, it will estimate the energy consumption by dividing the TDP by 2 
+(assuming an average utilization of 50%), and multiplying by the processing time.
+
+Sources:
+- [[https://github.com/mlco2/codecarbon/blob/6391b66c7947b06d48e485b99da32816390c865d/codecarbon/external/hardware.py#L161]]
+- [[https://github.com/mlco2/codecarbon/blob/6391b66c7947b06d48e485b99da32816390c865d/codecarbon/external/hardware.py#L226]]
+- [[https://github.com/mlco2/codecarbon/blob/6391b66c7947b06d48e485b99da32816390c865d/codecarbon/external/hardware.py#L21]]
+
 ** Observations
 - Once inside the virtual environment, you can run the ~deactivate~ command to
 disconnect from the virtual environment.
-- There are four sections ~(1a, 1b, 1c, 2a)~, each of which presents new
-  concepts and propose questions ~(Q1, Q2, Q3, Q4, Q5, Q6)~. These questions
+- There are five sections ~(1a, 1b, 1c, 1d, 2a)~, each of which presents new
+  concepts and propose questions ~(Q1, Q2, Q3, Q4, Q5, Q6, Q7)~. These questions
   will be explored during the hands-on session. You can run a different section
   by using the ~--sect~ argument in the command at step 5.
 - The questions can be seen at the ~session.py~ as comments. Inside a terminal

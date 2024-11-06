@@ -1,4 +1,4 @@
-# Licensed under the Apache License, Version 2.0 (the "License");
+#@title Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -15,35 +15,50 @@ import sys
 import time
 import numpy as np
 import tensorflow as tf
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from codecarbon import EmissionsTracker
 from codecarbon import OfflineEmissionsTracker
 from tensorflow.keras import datasets
 from tensorflow.keras.callbacks import Callback
+from datetime import datetime
 
 import argparse
 import cct
 import models
+import subprocess
+import os
 
 parser = argparse.ArgumentParser(description='Demo')
 
 parser.add_argument('--sect', type=str, default='init', required=False, help='Selects the section to run')
 args = parser.parse_args()
 
+SLEEP_TIME_SECONDS = 5
+
+ALUMET_RESULT_FILENAME = "./Results-CSV/"+datetime.now().strftime('%Y-%m-%d_%H:%M:%S')+"_alumet-output.csv"
+
+ONE_JOULE_TO_KWH = 2.77778e-7
+
+alumet_command = ["./bin/alumet-local-agent"]
+
 ##############################################
 ############# Sections Outline ###############
 ##############################################
 
 # 1a: Standard Run
-# 1b: Basic use of CarbonTracker
+# 1b: Basic use of CodeCarbon
 # 1c: Energy is all we need: tracking energy
+# 1d: Using Alumet with perf-events
 # 2a: Getting energy information when training
 
-sections = ['1a', '1b', '1c',
+sections = ['1a', '1b', '1c', '1d',
             '2a']
 
 if args.sect not in sections:
-    print ('Incorrect section name. Please choose a section between 1[a-i] or 2[a-g]. Example: python session.py --sect 1c')
+    print ('Incorrect section name. Please choose a section between 1[a-d] or 2[a]. Example: python session.py --sect 1c')
     sys.exit()
 
 
@@ -87,7 +102,7 @@ if args.sect == '1a':
     sys.exit()
 
 ##############################################
-### Section 1b: Basic use of CarbonTracker ###
+### Section 1b: Basic use of CodeCarbon    ###
 ##############################################
 elif args.sect == '1b':
     start_1b = time.time()
@@ -104,7 +119,7 @@ elif args.sect == '1b':
     # https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
     # Tracker initialization parameters:
     # https://github.com/mlco2/codecarbon/blob/96c1ce15dbf33eaaaa378d3104bde64bfc9f1416/codecarbon/emissions_tracker.py#L157
-    tracker = OfflineEmissionsTracker(country_iso_code='DEU', log_level='error')
+    tracker = OfflineEmissionsTracker(country_iso_code='BRA', log_level='debug')   
 
     # Start Tracking 
     tracker.start()
@@ -152,7 +167,7 @@ elif args.sect == '1c':
     # Creating the tracker object
     # Country ISO codes can be found on Wikipedia
     # https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
-    tracker = OfflineEmissionsTracker(country_iso_code='DEU', log_level='error')
+    tracker = OfflineEmissionsTracker(country_iso_code='BRA', log_level='debug')
 
     # Start Tracking 
     tracker.start()
@@ -178,7 +193,7 @@ elif args.sect == '1c':
     print('Total CPU energy consumption: ' + str(tracker._total_cpu_energy.kWh) + ' kWh')
     print('Total RAM energy consumption: ' + str(tracker._total_ram_energy.kWh) + ' kWh')
     print('Total Energy consumption: ' + str(tracker._total_energy.kWh) + ' kWh')
-    print('Emissions by CarbonTracker: '+ str(emissions) + ' KgCO2e')
+    print('Emissions by CodeCarbon: '+ str(emissions) + ' kgCO2eq')
 
     print('\nAnswer of questions Q2 and Q3')
     ## Q2: How to take into account the power usage efficiency (PUE) of a datacenter?
@@ -198,8 +213,6 @@ elif args.sect == '1c':
     # CFE% stands for the percentage of carbon free energy
     # a CFE of 10% means that 10% of the energy has a CI of 0
     # the remaining 90% emits CO2 according to the corresponding CI
-    # A source of carbon intensity of electricity generation data:
-    # https://ourworldindata.org/grapher/carbon-intensity-electricity?time=latest
 
     #Data center data
     #Name    CFE%    CI (gCO2e/kWh)
@@ -207,16 +220,93 @@ elif args.sect == '1c':
     #dc2     91%	  127
     
     #### Q3 answer code goes here ####
-    dc_data: dict = {
-                    'dc1':{'CFE':11, 'CI':746},
-                    'dc2':{'CFE':91, 'CI':127}
-                    }
     q3_answer_dc1 = np.NaN
-    q3_answer_dc2 = np.NaN    
+    q3_answer_dc2 = np.NaN
     ##################################   
-    print('My calculated Emissions (dc1): '+ str(q3_answer_dc1) + ' KgCO2e')
-    print('My calculated Emissions (dc2): '+ str(q3_answer_dc2) + ' KgCO2e')
+    print('My calculated Emissions (dc1): '+ str(q3_answer_dc1) + ' kgCO2eq')
+    print('My calculated Emissions (dc2): '+ str(q3_answer_dc2) + ' kgCO2eq')
     sys.exit()
+
+##############################################
+################ Section 1d: #################
+####### Using Alumet with perf-events ########
+##############################################
+elif args.sect == '1d':
+    start_1c = time.time()
+    # Getting our simple convolutional model
+    model = models.get_simple_model()    
+
+    # Compile and train the model
+    model.compile(optimizer='adam',
+                  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                  metrics=['accuracy'])
+
+   
+    # Start tracking by lauching Alumet as a separate process
+    alumet = subprocess.Popen(alumet_command)
+
+    # Make a short sleep to let Alumet to start
+    time.sleep(SLEEP_TIME_SECONDS)
+
+    # Running the training loop
+    history = model.fit(train_images, train_labels, epochs=10, 
+                    validation_data=(test_images, test_labels))
+    
+    # Make a short sleep just to better illustrate the power curve
+    time.sleep(SLEEP_TIME_SECONDS)
+
+    # Stop the tracking by terminating the Alumet process  
+    alumet.terminate()      
+
+    # Rename Alumet's default csv file for better experiment control    
+    os.rename("./alumet-output.csv", ALUMET_RESULT_FILENAME)
+                
+    # Evaluating the trained model
+    test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
+    end_1c = time.time()
+    time_1c = end_1c - start_1c  
+
+    # Printing some results
+    print('Session 1c completed')
+    print('Test accuracy: '+ str(test_acc))
+    print('Processing time: '+ str(time_1c) + ' seconds')   
+    #print('Total Energy consumption: ' + str(tracker._total_energy.kWh) + ' kWh')
+    #print('Emissions by CarbonTracker: '+ str(emissions) + ' KgCO2e')
+
+    ## Q4: How is the power consumption of the CPU?
+    # Use Alumet's output file (whose path is described by the
+    # ALUMET_RESULT_FILENAME variable) to get a plot curve of the CPU power
+    # consumption. 
+    
+    # Hint 1: for a time period t, we can calculate the power in watts by
+    # dividing the energy consumed (in joules) during the time period t by the
+    # length of t in seconds. By default Alumet collects the energy consumption
+    # at one second intervals. This may facilidate your task.
+
+    # Hint 2: You can use Pandas to read Alumet's output
+    # Hint 3: You can use Seaborn's lineplot function to make the plot
+
+    #### Q4 answer code goes here ####
+    # Be mindful of the identation level
+    
+
+    ##################################   
+
+    ## Q5: How can we calculate the emissions with Alumet's data?
+    # Hint: use the Electricity Maps website
+    # (https://app.electricitymaps.com/map) to know the carbon intensity of  the
+    # electricity in your region. Then multiply the consumed energy by the
+    # carbon intensity. Pay extra attention to the units to avoid erroneous
+    # multiplication
+
+    #### Q5 answer code goes here ####
+    # Be mindful of the identation level        
+    total_emissions_platform_kgco2 = np.NaN
+    
+    ##################################      
+    print('Emissions: '+ str(total_emissions_platform_kgco2) + ' kgCO2eq')
+    sys.exit()
+
 
 
 ##############################################
@@ -226,27 +316,22 @@ elif args.sect == '1c':
 elif args.sect == '2a':    
     start_2a = time.time()       
 
-    # Creating a callback class to collect data while training
+    # Creating a callback method to collect data while training
     class MyTrainingCallBack(Callback):
         def __init__(self, codecarbon_tracker):
             self.codecarbon_tracker = codecarbon_tracker
             pass
 
-        ## Q4: How to stop training in an epoch when we pass a energy cap?
+        ## Q6: How to stop training in an epoch when we pass a energy cap?
         # Use the energy measured at section 1b as an energy cap for the
         # training 
         # 
         # Hint: variable to tell TF to stop training: self.model.stop_training
         # (True or False)       
         def on_epoch_end(self, epoch, logs=None):
-            self.codecarbon_tracker.flush()
+            pass        
 
-            #### Q4 answer code goes here ####
-            # Be mindful of the identation level
-
-            ##################################       
-
-        ## Q5: How to stop training in a **batch** when we pass a energy cap?
+        ## Q7: How to stop training in a **batch** when we pass a energy cap?
         # Use the energy measured at section 1b as an energy cap for the
         # training
         #   
@@ -255,12 +340,9 @@ elif args.sect == '2a':
         # 
         # Hint: use self.codecarbon_tracker._measure_power_and_energy() instead
         # of self.codecarbon_tracker.flush() to avoid IO overhead
-        ## Q6: What happens if you don't call _measure_power_and_energy() or flush()?
-
-        #### Q5 answer code goes here ####
-        # Be mindful of the identation level
-
-        ##################################
+        ## Q7: What happens if you don't call _measure_power_and_energy() or flush()?
+        def on_batch_end(self, batch, logs=None):
+            pass
 
 
     # Small label reshape to fit the CCT model
@@ -283,7 +365,7 @@ elif args.sect == '2a':
     # Creating the tracker object
     # Country ISO codes can be found on Wikipedia
     # https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
-    tracker = OfflineEmissionsTracker(country_iso_code='DEU', log_level='error')
+    tracker = OfflineEmissionsTracker(country_iso_code='BRA', log_level='error')
 
     # Initializing my call back object to be used during training
     my_callback = MyTrainingCallBack(tracker)
@@ -312,6 +394,6 @@ elif args.sect == '2a':
     print('Total CPU energy consumption: ' + str(tracker._total_cpu_energy.kWh) + ' kWh')
     print('Total RAM energy consumption: ' + str(tracker._total_ram_energy.kWh) + ' kWh')
     print('Total Energy consumption: ' + str(tracker._total_energy.kWh) + ' kWh')
-    print('Emissions by CarbonTracker: '+ str(emissions) + ' KgCO2e')   
+    print('Emissions by CodeCarbon: '+ str(emissions) + ' kgCO2eq')   
     
     sys.exit()
