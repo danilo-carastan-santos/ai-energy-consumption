@@ -6,7 +6,7 @@
 2) Linux OS (Tested on Ubuntu) with superuser (i.e., ~sudo~) permissions
 3) NVIDIA GPU (Not used in the session)
 4) TensorFlow (tested on version 2.9.0)
-5) CarbonTracker
+5) CodeCarbon
 6) Git
 
 Most energy measurement software rely on Intel's RAPL interface to obtain CPU
@@ -37,8 +37,8 @@ Open a terminal, then run the following commands
 ** 1. Create a directory to clone this repository
 
 #+begin_src shell
-mkdir idessai-2022-ai-energy-consumption
-cd idessai-2022-ai-energy-consumption
+mkdir measuring-energy-ai-tutorial
+cd measuring-energy-ai-tutorial
 #+end_src
 
 ** 2. Clone this repository
